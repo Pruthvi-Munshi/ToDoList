@@ -19,9 +19,9 @@ public class Task {
     private LocalDate dueDate;
     private boolean isCompleted;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name="task_id")
+    @ManyToMany(mappedBy = "tasks")
     private Set<Category> categories = new HashSet<>();
+
 
     public int getTaskId() {
         return taskId;
@@ -35,8 +35,12 @@ public class Task {
         return dueDate;
     }
 
-    public boolean isCompleted() {
+    public boolean getIsCompleted() {
         return isCompleted;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
     }
 
     public void setTaskId(int taskId) {
@@ -51,7 +55,11 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setIsCompleted(boolean completed) {
         isCompleted = completed;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 }

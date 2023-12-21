@@ -9,7 +9,13 @@ package com.learningcode.todolist.model;
 // Spring Boot makes extensive use of annotations to simplify the configuration and development of Spring-based applications.
 // Annotations are markers added to Java classes or methods that provide additional information to the Spring framework.
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.learningcode.todolist.enums.Colour;
 import jakarta.persistence.*;
+
+import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity // Indicates that this class is a JPA entity and should be mapped to a database table.
 @Table(name="category")
@@ -19,18 +25,30 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int categoryId;
 
-    @Column(name = "task_id")
-    private int taskId;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "task_categories",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    private Set<Task> tasks = new HashSet<>();
+
 
     private String categoryName;
+    private Colour colour;
 
     // GETTERS
     public int getCategoryId(){
         return categoryId;
     }
 
-    public int getTaskId() {
-        return taskId;
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public Colour getColour() {
+        return colour;
     }
 
     public String getCategoryName(){
@@ -42,8 +60,12 @@ public class Category {
         this.categoryId = categoryId;
     }
 
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
+    public void setTask(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void setColour(Colour colour) {
+        this.colour = colour;
     }
 
     public void setCategoryName(String categoryName) {
@@ -54,8 +76,9 @@ public class Category {
     public String toString() {
         return "Category{" +
                 "categoryId=" + categoryId +
-                ", taskId=" + taskId +
+                ", task=" + tasks +
                 ", categoryName='" + categoryName + '\'' +
+                ", colour=" + colour +
                 '}';
     }
 }
